@@ -21,7 +21,7 @@ export default function Home() {
   const [showWeeklyPlanner, setShowWeeklyPlanner] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [filters, setFilters] = useState<Filters>({
-    maxPrepTime: 45,
+    maxPrepTime: 60,
     pickyEaterFriendly: false,
     excludeAllergens: []
   });

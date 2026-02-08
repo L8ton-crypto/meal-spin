@@ -23,9 +23,10 @@ const allergens = [
 ];
 
 const prepTimeOptions = [
-  { value: 15, label: '15 min or less' },
-  { value: 30, label: '30 min or less' },
-  { value: 45, label: '45 min or less' },
+  { value: 15, label: '15 mins or less' },
+  { value: 30, label: '30 mins or less' },
+  { value: 45, label: '45 mins or less' },
+  { value: 60, label: '60 mins or less' },
 ];
 
 export default function FiltersPanel({ filters, onFiltersChange, onClose }: FiltersPanelProps) {
@@ -66,7 +67,7 @@ export default function FiltersPanel({ filters, onFiltersChange, onClose }: Filt
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-3">
             <Clock className="w-4 h-4" />
-            Maximum Prep Time
+            Total Time (prep + cook)
           </label>
           <div className="space-y-2">
             {prepTimeOptions.map(option => (
@@ -132,7 +133,7 @@ export default function FiltersPanel({ filters, onFiltersChange, onClose }: Filt
           <h4 className="text-sm font-medium text-gray-300 mb-2">Active Filters:</h4>
           <div className="flex flex-wrap gap-2">
             <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
-              ≤ {filters.maxPrepTime} min prep
+              ≤ {filters.maxPrepTime} mins total
             </span>
             {filters.pickyEaterFriendly && (
               <span className="px-2 py-1 bg-green-600 text-white text-xs rounded-full">
