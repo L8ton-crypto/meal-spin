@@ -12,6 +12,7 @@ interface Filters {
   maxPrepTime: number;
   pickyEaterFriendly: boolean;
   excludeAllergens: string[];
+  category: string;
 }
 
 export default function Home() {
@@ -23,7 +24,8 @@ export default function Home() {
   const [filters, setFilters] = useState<Filters>({
     maxPrepTime: 60,
     pickyEaterFriendly: false,
-    excludeAllergens: []
+    excludeAllergens: [],
+    category: 'all'
   });
 
   const handleSpin = async () => {

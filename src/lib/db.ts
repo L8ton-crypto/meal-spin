@@ -15,6 +15,7 @@ export interface Meal {
   ingredients: any;
   steps: any;
   nutrition: any;
+  category: string;
   created_at: string;
 }
 
@@ -48,28 +49,48 @@ export async function getMeals(filters?: {
   maxPrepTime?: number;
   pickyEaterFriendly?: boolean;
   excludeAllergens?: string[];
+  category?: string;
 }): Promise<Meal[]> {
   // Build conditions based on filters
-  // Note: maxPrepTime actually means max TOTAL time (prep + cook)
   const maxTime = filters?.maxPrepTime;
   const pickyOnly = filters?.pickyEaterFriendly;
   const excludeAllergens = filters?.excludeAllergens || [];
+  const category = filters?.category;
 
-  // Use different queries based on filter combinations to work with tagged template
-  // Filter on (prep_time + cook_time) for total time
-  if (maxTime && pickyOnly && excludeAllergens.length > 0) {
+  // Dynamic query building with neon tagged templates
+  // Category filter: 'all' or undefined means no filter
+  const hasCategory = category && category !== 'all';
+  const hasAllergens = excludeAllergens.length > 0;
+
+  if (hasCategory && maxTime && pickyOnly && hasAllergens) {
+    return sql`SELECT * FROM meals WHERE category = ${category} AND (prep_time + cook_time) <= ${maxTime} AND is_picky_eater_friendly = true AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (hasCategory && maxTime && pickyOnly) {
+    return sql`SELECT * FROM meals WHERE category = ${category} AND (prep_time + cook_time) <= ${maxTime} AND is_picky_eater_friendly = true ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (hasCategory && maxTime && hasAllergens) {
+    return sql`SELECT * FROM meals WHERE category = ${category} AND (prep_time + cook_time) <= ${maxTime} AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (hasCategory && pickyOnly && hasAllergens) {
+    return sql`SELECT * FROM meals WHERE category = ${category} AND is_picky_eater_friendly = true AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (hasCategory && maxTime) {
+    return sql`SELECT * FROM meals WHERE category = ${category} AND (prep_time + cook_time) <= ${maxTime} ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (hasCategory && pickyOnly) {
+    return sql`SELECT * FROM meals WHERE category = ${category} AND is_picky_eater_friendly = true ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (hasCategory && hasAllergens) {
+    return sql`SELECT * FROM meals WHERE category = ${category} AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (hasCategory) {
+    return sql`SELECT * FROM meals WHERE category = ${category} ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (maxTime && pickyOnly && hasAllergens) {
     return sql`SELECT * FROM meals WHERE (prep_time + cook_time) <= ${maxTime} AND is_picky_eater_friendly = true AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
   } else if (maxTime && pickyOnly) {
     return sql`SELECT * FROM meals WHERE (prep_time + cook_time) <= ${maxTime} AND is_picky_eater_friendly = true ORDER BY RANDOM()` as unknown as Meal[];
-  } else if (maxTime && excludeAllergens.length > 0) {
+  } else if (maxTime && hasAllergens) {
     return sql`SELECT * FROM meals WHERE (prep_time + cook_time) <= ${maxTime} AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
-  } else if (pickyOnly && excludeAllergens.length > 0) {
+  } else if (pickyOnly && hasAllergens) {
     return sql`SELECT * FROM meals WHERE is_picky_eater_friendly = true AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
   } else if (maxTime) {
     return sql`SELECT * FROM meals WHERE (prep_time + cook_time) <= ${maxTime} ORDER BY RANDOM()` as unknown as Meal[];
   } else if (pickyOnly) {
     return sql`SELECT * FROM meals WHERE is_picky_eater_friendly = true ORDER BY RANDOM()` as unknown as Meal[];
-  } else if (excludeAllergens.length > 0) {
+  } else if (hasAllergens) {
     return sql`SELECT * FROM meals WHERE NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
   } else {
     return sql`SELECT * FROM meals ORDER BY RANDOM()` as unknown as Meal[];
@@ -85,6 +106,7 @@ export async function getRandomMeal(filters?: {
   maxPrepTime?: number;
   pickyEaterFriendly?: boolean;
   excludeAllergens?: string[];
+  category?: string;
 }): Promise<Meal | null> {
   const meals = await getMeals(filters);
   return meals.length > 0 ? meals[0] : null;

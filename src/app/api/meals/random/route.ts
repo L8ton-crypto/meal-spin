@@ -6,12 +6,13 @@ export async function POST(request: NextRequest) {
     await initDb();
     
     const body = await request.json();
-    const { maxPrepTime, pickyEaterFriendly, excludeAllergens } = body;
+    const { maxPrepTime, pickyEaterFriendly, excludeAllergens, category } = body;
     
     const meal = await getRandomMeal({
       maxPrepTime,
       pickyEaterFriendly,
-      excludeAllergens
+      excludeAllergens,
+      category
     });
     
     if (!meal) {

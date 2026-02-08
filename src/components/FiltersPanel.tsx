@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { X, Clock, Users, AlertTriangle } from 'lucide-react';
+import { X, Clock, Users, AlertTriangle, Utensils } from 'lucide-react';
 
 interface Filters {
   maxPrepTime: number;
   pickyEaterFriendly: boolean;
   excludeAllergens: string[];
+  category: string;
 }
 
 interface FiltersPanelProps {
@@ -27,6 +28,14 @@ const prepTimeOptions = [
   { value: 30, label: '30 mins or less' },
   { value: 45, label: '45 mins or less' },
   { value: 60, label: '60 mins or less' },
+];
+
+const categoryOptions = [
+  { value: 'all', label: 'All', icon: '🍽️' },
+  { value: 'main', label: 'Mains', icon: '🍝' },
+  { value: 'snack', label: 'Snacks', icon: '🥪' },
+  { value: 'dessert', label: 'Desserts', icon: '🍰' },
+  { value: 'breakfast', label: 'Breakfast', icon: '🥞' },
 ];
 
 export default function FiltersPanel({ filters, onFiltersChange, onClose }: FiltersPanelProps) {
@@ -62,12 +71,35 @@ export default function FiltersPanel({ filters, onFiltersChange, onClose }: Filt
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Category */}
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-3">
+            <Utensils className="w-4 h-4" />
+            Category
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {categoryOptions.map(option => (
+              <button
+                key={option.value}
+                onClick={() => updateFilters({ category: option.value })}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  filters.category === option.value
+                    ? 'bg-yellow-400 text-gray-900'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                {option.icon} {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Prep Time */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-3">
             <Clock className="w-4 h-4" />
-            Total Time (prep + cook)
+            Total Time
           </label>
           <div className="space-y-2">
             {prepTimeOptions.map(option => (
@@ -128,10 +160,15 @@ export default function FiltersPanel({ filters, onFiltersChange, onClose }: Filt
       </div>
 
       {/* Active Filters Summary */}
-      {(filters.excludeAllergens.length > 0 || filters.pickyEaterFriendly || filters.maxPrepTime < 45) && (
+      {(filters.excludeAllergens.length > 0 || filters.pickyEaterFriendly || filters.maxPrepTime < 45 || (filters.category && filters.category !== 'all')) && (
         <div className="mt-6 pt-4 border-t border-gray-700">
           <h4 className="text-sm font-medium text-gray-300 mb-2">Active Filters:</h4>
           <div className="flex flex-wrap gap-2">
+            {filters.category && filters.category !== 'all' && (
+              <span className="px-2 py-1 bg-purple-600 text-white text-xs rounded-full">
+                {categoryOptions.find(c => c.value === filters.category)?.icon} {categoryOptions.find(c => c.value === filters.category)?.label}
+              </span>
+            )}
             <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
               ≤ {filters.maxPrepTime} mins total
             </span>
