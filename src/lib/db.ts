@@ -371,7 +371,134 @@ async function seedMeals() {
         "Cook in waffle iron until golden"
       ],
       nutrition: { calories: 340, protein: 11, carbs: 50, fat: 12 }
+    },
+    {
+      name: "Tacos",
+      description: "Soft shell tacos with ground beef",
+      prep_time: 15,
+      cook_time: 10,
+      servings: 4,
+      image_url: null,
+      is_picky_eater_friendly: true,
+      allergens: ["dairy"],
+      ingredients: [
+        { item: "Ground beef", amount: "1 lb" },
+        { item: "Taco seasoning", amount: "1 packet" },
+        { item: "Soft taco shells", amount: "8" },
+        { item: "Shredded cheese", amount: "1 cup" },
+        { item: "Lettuce", amount: "2 cups shredded" },
+        { item: "Tomatoes", amount: "2, diced" }
+      ],
+      steps: [
+        "Brown ground beef in large pan",
+        "Add taco seasoning and water per packet instructions",
+        "Simmer until thickened",
+        "Warm taco shells according to package",
+        "Assemble tacos with meat and toppings"
+      ],
+      nutrition: { calories: 380, protein: 24, carbs: 28, fat: 18 }
+    },
+    {
+      name: "Hot Dogs",
+      description: "Classic hot dogs with buns",
+      prep_time: 5,
+      cook_time: 8,
+      servings: 4,
+      image_url: null,
+      is_picky_eater_friendly: true,
+      allergens: ["gluten"],
+      ingredients: [
+        { item: "Hot dogs", amount: "8" },
+        { item: "Hot dog buns", amount: "8" },
+        { item: "Ketchup", amount: "optional" },
+        { item: "Mustard", amount: "optional" },
+        { item: "Relish", amount: "optional" }
+      ],
+      steps: [
+        "Boil hot dogs in water for 5-7 minutes",
+        "Or grill for 8-10 minutes",
+        "Warm buns if desired",
+        "Place hot dogs in buns",
+        "Add condiments as desired"
+      ],
+      nutrition: { calories: 290, protein: 12, carbs: 25, fat: 16 }
+    },
+    {
+      name: "French Toast",
+      description: "Sweet breakfast french toast",
+      prep_time: 10,
+      cook_time: 15,
+      servings: 4,
+      image_url: null,
+      is_picky_eater_friendly: true,
+      allergens: ["gluten", "dairy", "eggs"],
+      ingredients: [
+        { item: "Bread slices", amount: "8 thick slices" },
+        { item: "Eggs", amount: "4" },
+        { item: "Milk", amount: "0.5 cups" },
+        { item: "Vanilla", amount: "1 tsp" },
+        { item: "Cinnamon", amount: "1 tsp" },
+        { item: "Butter", amount: "for cooking" }
+      ],
+      steps: [
+        "Beat eggs, milk, vanilla, and cinnamon",
+        "Dip bread slices in mixture",
+        "Cook in buttered pan until golden on both sides",
+        "Serve with syrup and butter"
+      ],
+      nutrition: { calories: 320, protein: 12, carbs: 38, fat: 14 }
+    },
+    {
+      name: "Chicken Rice Bowl",
+      description: "Simple chicken and rice dinner",
+      prep_time: 10,
+      cook_time: 25,
+      servings: 4,
+      image_url: null,
+      is_picky_eater_friendly: true,
+      allergens: [],
+      ingredients: [
+        { item: "Chicken breast", amount: "1 lb, diced" },
+        { item: "White rice", amount: "1.5 cups uncooked" },
+        { item: "Chicken broth", amount: "3 cups" },
+        { item: "Soy sauce", amount: "2 tbsp" },
+        { item: "Garlic powder", amount: "1 tsp" },
+        { item: "Frozen peas", amount: "1 cup" }
+      ],
+      steps: [
+        "Cook rice in chicken broth",
+        "Season and cook diced chicken",
+        "Add peas in last 2 minutes of cooking",
+        "Serve chicken over rice",
+        "Drizzle with soy sauce"
+      ],
+      nutrition: { calories: 420, protein: 32, carbs: 58, fat: 6 }
+    },
+    {
+      name: "Meatball Subs",
+      description: "Meatballs in marinara on sub rolls",
+      prep_time: 10,
+      cook_time: 20,
+      servings: 4,
+      image_url: null,
+      is_picky_eater_friendly: true,
+      allergens: ["gluten", "dairy"],
+      ingredients: [
+        { item: "Frozen meatballs", amount: "20 pieces" },
+        { item: "Marinara sauce", amount: "2 cups" },
+        { item: "Sub rolls", amount: "4" },
+        { item: "Mozzarella cheese", amount: "1 cup shredded" }
+      ],
+      steps: [
+        "Heat meatballs in marinara sauce",
+        "Simmer for 15 minutes",
+        "Split sub rolls and warm slightly",
+        "Fill with meatballs and sauce",
+        "Top with cheese and serve"
+      ],
+      nutrition: { calories: 520, protein: 26, carbs: 48, fat: 24 }
     }
+    // Now we have 15 diverse kid-friendly meals!
   ];
 
   for (const meal of meals) {
