@@ -49,31 +49,29 @@ export async function getMeals(filters?: {
   pickyEaterFriendly?: boolean;
   excludeAllergens?: string[];
 }): Promise<Meal[]> {
-  let query = `SELECT * FROM meals WHERE 1=1`;
-  const params: any[] = [];
-  let paramIndex = 1;
+  // Build conditions based on filters
+  const maxTime = filters?.maxPrepTime;
+  const pickyOnly = filters?.pickyEaterFriendly;
+  const excludeAllergens = filters?.excludeAllergens || [];
 
-  if (filters?.maxPrepTime) {
-    query += ` AND prep_time <= $${paramIndex}`;
-    params.push(filters.maxPrepTime);
-    paramIndex++;
+  // Use different queries based on filter combinations to work with tagged template
+  if (maxTime && pickyOnly && excludeAllergens.length > 0) {
+    return sql`SELECT * FROM meals WHERE prep_time <= ${maxTime} AND is_picky_eater_friendly = true AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (maxTime && pickyOnly) {
+    return sql`SELECT * FROM meals WHERE prep_time <= ${maxTime} AND is_picky_eater_friendly = true ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (maxTime && excludeAllergens.length > 0) {
+    return sql`SELECT * FROM meals WHERE prep_time <= ${maxTime} AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (pickyOnly && excludeAllergens.length > 0) {
+    return sql`SELECT * FROM meals WHERE is_picky_eater_friendly = true AND NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (maxTime) {
+    return sql`SELECT * FROM meals WHERE prep_time <= ${maxTime} ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (pickyOnly) {
+    return sql`SELECT * FROM meals WHERE is_picky_eater_friendly = true ORDER BY RANDOM()` as unknown as Meal[];
+  } else if (excludeAllergens.length > 0) {
+    return sql`SELECT * FROM meals WHERE NOT (allergens && ${excludeAllergens}::text[]) ORDER BY RANDOM()` as unknown as Meal[];
+  } else {
+    return sql`SELECT * FROM meals ORDER BY RANDOM()` as unknown as Meal[];
   }
-
-  if (filters?.pickyEaterFriendly) {
-    query += ` AND is_picky_eater_friendly = $${paramIndex}`;
-    params.push(true);
-    paramIndex++;
-  }
-
-  if (filters?.excludeAllergens && filters.excludeAllergens.length > 0) {
-    query += ` AND NOT (allergens && $${paramIndex})`;
-    params.push(filters.excludeAllergens);
-    paramIndex++;
-  }
-
-  query += ` ORDER BY RANDOM()`;
-
-  return sql(query, params) as unknown as Meal[];
 }
 
 export async function getMealById(id: number): Promise<Meal | null> {
