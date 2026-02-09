@@ -5,7 +5,8 @@ import SpinWheel from '@/components/SpinWheel';
 import FiltersPanel from '@/components/FiltersPanel';
 import MealCard from '@/components/MealCard';
 import WeeklyPlanner from '@/components/WeeklyPlanner';
-import { ChefHat, Calendar, Heart, Settings } from 'lucide-react';
+import { ChefHat, Calendar, Heart, Settings, BookOpen } from 'lucide-react';
+import Link from 'next/link';
 import { Meal } from '@/lib/db';
 
 interface Filters {
@@ -99,13 +100,13 @@ export default function Home() {
             <Calendar className="w-4 h-4" />
             Weekly Plan
           </button>
-          <button
-            onClick={() => {/* TODO: Show favorites */}}
-            className="flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 rounded-full transition-colors"
+          <Link
+            href="/recipes"
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-full transition-colors"
           >
-            <Heart className="w-4 h-4" />
-            Favorites ({favorites.length})
-          </button>
+            <BookOpen className="w-4 h-4" />
+            Recipe Book
+          </Link>
         </div>
 
         {/* Filters Panel */}

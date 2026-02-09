@@ -24,6 +24,14 @@ export default function MealCard({ meal, isFavorite, onToggleFavorite }: MealCar
       animate={{ opacity: 1, y: 0 }}
       className="bg-gray-800 rounded-xl shadow-xl border border-gray-700 overflow-hidden max-w-4xl mx-auto"
     >
+      {/* Hero Image */}
+      {meal.image_url && (
+        <div className="relative h-48 sm:h-56 bg-gray-700">
+          <img src={meal.image_url} alt={meal.name} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-800/60 to-transparent" />
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6">
         <div className="flex items-start justify-between">
